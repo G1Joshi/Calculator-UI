@@ -32,6 +32,7 @@ class ViewController: UIViewController {
     }
 
     func setupButtons() {
+        var firstNumber = "", secondNumber = "", operation: String?
         let buttons = [
             ["%", "+/-", "AC", "/"],
             ["7", "8", "9", "*"],
@@ -56,6 +57,67 @@ class ViewController: UIViewController {
                 if i == 3 {
                     button.backgroundColor = .systemOrange
                 }
+                let action = UIAction(title: "") { _ in
+                    switch e {
+                    case "AC":
+                        firstNumber = ""
+                        secondNumber = ""
+                        operation = nil
+                        self.label.text = ""
+                    case "/", "*", "-", "+", "%":
+                        if firstNumber != "" && operation == nil {
+                            operation = e
+                            self.label.text! += e
+                        }
+                    case "+/-":
+                        if self.label.text?.first == "-" {
+                            self.label.text?.removeFirst()
+                            firstNumber.removeFirst()
+                        } else {
+                            self.label.text?.insert("-", at: self.label.text!.startIndex)
+                            firstNumber.insert("-", at: firstNumber.startIndex)
+                        }
+                    case "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "00", ".":
+                        if firstNumber == "" {
+                            self.label.text = ""
+                        }
+                        if operation == nil {
+                            if firstNumber.localizedStandardContains(".") && e == "." {
+                                break
+                            }
+                            firstNumber += e
+                        } else {
+                            if secondNumber.localizedStandardContains(".") && e == "." {
+                                break
+                            }
+                            secondNumber += e
+                        }
+                        self.label.text! += e
+                    case "=":
+                        let tempFirstNumber = Float(firstNumber) ?? 0
+                        let tempSecondNumber = Float(secondNumber) ?? 0
+                        let tempOperation = operation
+                        firstNumber = ""
+                        secondNumber = ""
+                        operation = nil
+                        switch tempOperation {
+                        case "/":
+                            if tempSecondNumber == 0 {
+                                self.label.text = "Infinite"
+                            } else {
+                                self.label.text = String(tempFirstNumber / tempSecondNumber)
+                            }
+                        case "*": self.label.text = String(tempFirstNumber * tempSecondNumber)
+                        case "-": self.label.text = String(tempFirstNumber - tempSecondNumber)
+                        case "+": self.label.text = String(tempFirstNumber + tempSecondNumber)
+                        case "%": self.label.text = String(Int(tempFirstNumber) % Int(tempSecondNumber))
+                        default: break
+                        }
+                        fallthrough
+                    default: firstNumber = self.label.text ?? ""
+                    }
+                }
+                button.addAction(action, for: .touchUpInside)
                 stackView.addArrangedSubview(button)
             }
             mainStackView.addArrangedSubview(stackView)
