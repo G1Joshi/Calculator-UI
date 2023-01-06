@@ -8,8 +8,72 @@
 import UIKit
 
 class ViewController: UIViewController {
+    let mainStackView = UIStackView()
+    let labelView = UIView()
+    let label = UILabel()
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        view.backgroundColor = .systemBackground
+        view.addSubview(mainStackView)
+
+        label.text = "0"
+        label.font = .boldSystemFont(ofSize: 50)
+        labelView.addSubview(label)
+
+        mainStackView.axis = .vertical
+        mainStackView.distribution = .fillEqually
+        mainStackView.alignment = .fill
+        mainStackView.spacing = 1
+        mainStackView.addArrangedSubview(labelView)
+
+        setupButtons()
+        setupConstraints()
+    }
+
+    func setupButtons() {
+        let buttons = [
+            ["%", "+/-", "AC", "/"],
+            ["7", "8", "9", "*"],
+            ["4", "5", "6", "-"],
+            ["1", "2", "3", "+"],
+            ["0", "00", ".", "="],
+        ]
+        for (index, element) in buttons.enumerated() {
+            let stackView = UIStackView()
+            stackView.axis = .horizontal
+            stackView.distribution = .fillEqually
+            stackView.alignment = .fill
+            stackView.spacing = 1
+            for (i, e) in element.enumerated() {
+                let button = UIButton()
+                button.setTitle(e, for: .normal)
+                button.titleLabel?.font = .boldSystemFont(ofSize: 30)
+                button.backgroundColor = .systemCyan
+                if index == 0 {
+                    button.backgroundColor = .systemGray
+                }
+                if i == 3 {
+                    button.backgroundColor = .systemOrange
+                }
+                stackView.addArrangedSubview(button)
+            }
+            mainStackView.addArrangedSubview(stackView)
+        }
+    }
+
+    func setupConstraints() {
+        mainStackView.translatesAutoresizingMaskIntoConstraints = false
+        label.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            mainStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            mainStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            mainStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            mainStackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+
+            label.centerYAnchor.constraint(equalTo: labelView.centerYAnchor),
+            label.trailingAnchor.constraint(equalTo: labelView.trailingAnchor, constant: -10),
+        ])
     }
 }
