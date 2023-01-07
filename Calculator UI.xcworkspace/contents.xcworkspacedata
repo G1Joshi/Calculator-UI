@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:Calculator SwiftUI/Calculator SwiftUI.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:Calculator Programmatic/Calculator Programmatic.xcodeproj">
    </FileRef>
    <FileRef
